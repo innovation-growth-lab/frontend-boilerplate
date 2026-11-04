@@ -36,23 +36,6 @@ npm run preview    # serve dist/ locally
 npm run lint       # Biome; lefthook also formats on commit and lints on push
 ```
 
-## Where things are
-
-- `src/App.jsx`: every page and its URL.
-- `src/entry-server.jsx` and `scripts/prerender.js`: render pages to static
-  HTML at build time (see Hosting). **Add each new page to `routes` here as
-  well as to `App.jsx`.**
-- `src/pages/`: one file per page. Each sets its own `<title>` with
-  `pageTitle()` from `src/config.js`.
-- `src/components/`: `Layout` (nav, footer, scroll handling, cookie banner),
-  `ui.jsx` (Button, Icon, Container, Eyebrow, `cx`), `CookieBanner` and
-  `NotFound`.
-- `src/flags.js`: feature flags (see below).
-- `src/lib/ga.js`: Google Analytics and cookie consent.
-- `src/index.css`: the IGL brand as a Tailwind theme (palette, fonts, type
-  scale). Tailwind's own colours are switched off, so the IGL palette is all
-  there is: `bg-yellow-30`, `text-dark-blue`. Icons come from `lucide-react`.
-
 ## Feature flags
 
 Each flag is `VITE_FLAG_<NAME>=on|off`, with its default in `src/flags.js` and
@@ -70,7 +53,7 @@ which overrule `.env`. You can see the flags for the build in `dist/VERSION`.
 
 ## Hosting
 
-`npm run build` renders every page in `routes` to static HTML so crawlers and
+`npm run build` renders every page in `src/routes.jsx` to static HTML so crawlers and
 first paint get real content, and the browser then hydrates it. Unknown paths
 get `dist/404.html`. Pages render in Node first, so anything that touches
 `window`, `document` or `localStorage` must stay inside an effect or event
@@ -114,16 +97,3 @@ views come from GA's "page changes based on browser history events" setting
 (keep it on).
 
 `VITE_FLAG_ANALYTICS=off` removes GA, the banner and the footer link.
-
-## Snapshotting
-
-For visual changes, agents should screenshot every screen before and after the
-change and compare them side by side. This uses the installed Google Chrome.
-Add new pages and states to `SCREENS` in `scripts/screenshots.js`.
-
-```
-npm run screenshots -- http://localhost:5173/ screens/before
-# make the change
-npm run screenshots -- http://localhost:5173/ screens/after
-npm run compare -- screens/before screens/after screens/compare
-```
