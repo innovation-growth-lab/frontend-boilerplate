@@ -19,6 +19,10 @@ npm run preview    # serve dist/ locally
 npm run lint       # Biome
 ```
 
+With `npm run preview`, open pages with a trailing slash (`/components/`).
+Without one, the preview server sends the home page's HTML and React reports a
+hydration mismatch that isn't real; Apache redirects to the slash.
+
 lefthook formats staged files with Biome on commit and lints on push. If a hook
 fails, fix the code or add an ignore rule; don't skip the hooks with `--no-verify`.
 
@@ -34,17 +38,20 @@ fails, fix the code or add an ignore rule; don't skip the hooks with `--no-verif
   `src/index.css`, so `bg-gray-100` or `text-slate-600` silently do nothing.
   Use the IGL names: `dark-blue`, `blue`, `blue-60`/`30`/`10`, `red`,
   `red-80`/`60`/`40`, `yellow` (`-80`/`60`/`30`), `green` (`-40`/`20`),
-  `grey`, `grey-50`/`150`/`200`/`300`/`500`/`700`, `white`, `black`. The type
-  scale is Tailwind's sizes (plus `text-2xs`) with tighter line heights.
+  `grey`, `grey-50`/`150`/`200`/`300`/`500`/`700`, `white`, `black`. shadcn's
+  role names (`primary`, `muted-foreground`, `border`, `input`, `ring` …) also
+  work, set to IGL colours in `src/index.css`. The type scale is Tailwind's
+  sizes (plus `text-2xs`) with tighter line heights. Corners are square:
+  `rounded-*` gives 0.
 - **Pages render in Node first.** Prerendering runs every page with no
   browser, so anything that reads `window`, `document` or `localStorage` must
   be inside a `useEffect` or an event handler, never in the render itself.
   Content that depends on them renders after hydration.
 - **Every page sets its title** with `<title>{pageTitle('Name')}</title>`
   (`src/config.js`). React needs `<title>` to hold one string.
-- **Use the shared components** in `src/components/ui.jsx` (`Button`, `Icon`,
-  `Container`, `Eyebrow`, `cx`) before writing new ones. Icons come from
-  `lucide-react`; add one to `GLYPHS` in `ui.jsx` to use it by name.
+- **Build from `src/components/ui/`** (see Components) before writing a
+  control of your own. If one's missing, `npx shadcn add <name>` it and restyle
+  it to IGL.
 - **Never commit the Brown font files.** Brown is a commercial Lineto typeface
   and this repo is public; `.gitignore` excludes them. If they're missing,
   headings fall back to Century Gothic. That's expected, not a bug to fix.
@@ -56,8 +63,10 @@ fails, fix the code or add an ignore rule; don't skip the hooks with `--no-verif
 - `src/routes.jsx`: every page, its URL, flag and prerendered paths.
 - `src/pages/`: one file per page.
 - `src/config.js`: site name, nav links, footer, `pageTitle()`.
+- `src/components/ui/`: the UI components, shadcn/ui restyled to IGL, plus
+  `Container` and `Eyebrow`. `/components` shows them all.
 - `src/components/`: `Layout` (nav, footer, scroll handling, cookie banner),
-  `ui.jsx`, `CookieBanner`, `NotFound`.
+  `CookieBanner`, `NotFound`.
 - `src/flags.js`: feature flags.
 - `src/lib/ga.js`: Google Analytics and cookie consent.
 - `src/index.css`: the IGL brand as a Tailwind theme.
@@ -78,11 +87,58 @@ off is hidden, but its code still ships, so a flag is no place for secrets.
 
 For a whole page, give it `flag: '<name>'` in `src/routes.jsx`: when it's off
 the page isn't registered or prerendered, and its URL is the not-found page.
-For part of a page, use `flags.<name> && ...`.
+Give a flagged page `load: () => import('./pages/X.jsx')` rather than
+`element`: its code is then split into its own file, which visitors don't
+download while the flag is off (it's still built and deployed, so still no
+place for secrets). For part of a page, use `flags.<name> && ...`.
 
 `deploy.sh` forces flags for the live site in its `FLAGS` list, whatever the
 `.env` files say, and writes them to `dist/VERSION`. Use that for anything that
 must never be shown on the live site. The `add-flag` skill walks through it.
+
+## Components
+
+`src/components/ui/` holds shadcn/ui components (`components.json`), on
+**Base UI** rather than Radix, restyled to the IGL design system. `/components`
+shows each one; it's behind the `componentsPage` flag, which `deploy.sh` turns
+off for the live site.
+
+- **Base UI, not Radix.** To make a trigger render as another component, use
+  `render`, not `asChild`: `<DialogTrigger render={<Button variant="outline" />}>`.
+  Base UI's docs (https://base-ui.com) cover each primitive.
+- **Button.** `variant` is `default` (the red primary, one per page),
+  `secondary`, `ghost`, `link`, `outline` or `destructive`; `size` is `sm`,
+  `default`, `lg`, or `icon`/`icon-sm`/`icon-xs`/`icon-lg` for icon-only
+  buttons (give those an `aria-label`). `to="/path"` makes it an in-app link
+  and `href` an external one.
+- **Icons** come from `lucide-react`, used directly. CSS squares them off to
+  match the IGL set. In a button, put the icon after the label with
+  `data-icon="inline-end"`: `<Button>Next <ArrowRight data-icon="inline-end" /></Button>`.
+- **Labels:** `Label` is set in Brown like the design system's field labels.
+  Beside a checkbox, pass `className="font-sans text-lg"`.
+- **Class names** are combined with `cn`, which lets a `className` override a
+  component's own classes. `vite.config.js` points `import {cn} from 'cn'` at
+  `src/lib/cn.js`, a copy taught the IGL theme's custom names
+  (`tracking-label`, `max-w-page`, `shadow-menu`). Add a name there when you
+  add a non-colour, non-size token to the theme.
+- **Dark mode:** there isn't one. The components' `dark:` classes stay inert.
+- **Lint:** `.biome.json` turns off three accessibility rules for
+  `src/components/ui/` only, where shadcn's own patterns trip them. Elsewhere
+  they apply.
+
+A component added with `npx shadcn add <name>` arrives in shadcn's default
+style and needs restyling to match the others:
+
+- Form controls: `h-14`, `px-4`, `text-lg`, `bg-background`, a `border-input`
+  border.
+- Focus: `focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring`
+  (a 2px blue edge). Invalid: `aria-invalid:border-destructive
+  aria-invalid:ring-2 aria-invalid:ring-destructive`.
+- Menu and list items: `py-2 pl-3 text-base`.
+- No fixed corners (`rounded-[4px]`) or soft rings (`ring-ring/50`,
+  `ring-foreground/10`: use `ring-border`).
+- Then add it to `src/pages/Components.jsx`, and if it opens something, a
+  screen to `STATES` in `scripts/screenshots.js`.
 
 ## Hosting
 
@@ -146,10 +202,11 @@ npm run compare -- screens/before screens/after screens/compare
 
 Every path in `src/routes.jsx` is screenshotted automatically, named after its
 URL. Add states a plain page load doesn't show (an open dialog, a filled form)
-to `STATES` in `scripts/screenshots.js`. `ONLY=<regex>` limits the run. Run the
-script with the same `VITE_FLAG_*` values as the dev server, since it reads the
-page list itself. Look at the compare images, and show the person the relevant
-ones.
+to `STATES` in `scripts/screenshots.js`; those are shot at window size, since a
+full-page shot resizes the window and closes some popups. `ONLY=<regex>` limits
+the run. Run the script with the same `VITE_FLAG_*` values as the dev server,
+since it reads the page list itself. Look at the compare images, and show the
+person the relevant ones.
 
 ## Skills
 

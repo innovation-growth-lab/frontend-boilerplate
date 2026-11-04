@@ -49,7 +49,9 @@ VITE_FLAG_ANALYTICS=off npm run dev
 ```
 
 Vite fixes flags into the bundle at build time. A feature that's off is
-hidden but its code is still bundled.
+hidden, but its code is still built and deployed, so a flag is no place for
+secrets. A page behind a flag (`load` in `src/routes.jsx`) is split into its
+own file, which visitors don't download while the flag is off.
 
 `deploy.sh` has overrides as a safeguard for the live site in its `FLAGS` list
 which overrule `.env`. You can see the flags for the build in `dist/VERSION`.

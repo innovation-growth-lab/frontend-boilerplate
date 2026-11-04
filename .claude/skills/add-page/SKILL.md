@@ -13,7 +13,8 @@ description: Add a new page (a new URL) to this site. Use when someone asks for 
 
 2. **Write the page** in `src/pages/<Name>.jsx`, following `src/pages/Home.jsx`:
    - a `<title>{pageTitle('<Name>')}</title>` first;
-   - content inside `<Container>`, built from `src/components/ui.jsx`;
+   - content inside `<Container>`, built from the components in
+     `src/components/ui/` (`/components` shows them all; see AGENTS.md);
    - IGL colours only (see AGENTS.md); nothing that reads `window`, `document`
      or `localStorage` outside `useEffect` or an event handler.
      For a parameter, read it with `useParams()` from `react-router`, and render
@@ -21,7 +22,8 @@ description: Add a new page (a new URL) to this site. Use when someone asks for 
 
 3. **Register it** with one line in `PAGES` in `src/routes.jsx`:
    - plain: `{path: '/case-studies', element: <CaseStudies />}`
-   - flagged: add `flag: '<name>'`
+   - flagged: `{path: '/case-studies', load: () => import('./pages/CaseStudies.jsx'), flag: '<name>'}`,
+     so its code isn't downloaded when the flag is off
    - with a parameter: add `paths` listing every real URL, built from the same
      content the page reads, e.g. `paths: guides.map((g) => \`/guides/${g.slug}\`)`.
 Use `paths: []` only for pages built from a visitor's own data, and read

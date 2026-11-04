@@ -22,8 +22,10 @@ description: Add a feature flag, to switch a page or feature on or off per build
 3. **`.env.example`:** add a commented line in the same style, with its default.
 
 4. **Use it.**
-   - A whole page: `flag: 'caseStudies'` on its entry in `src/routes.jsx`.
-     Don't wrap routes in `App.jsx`.
+   - A whole page: `flag: 'caseStudies'` on its entry in `src/routes.jsx`,
+     with `load: () => import('./pages/CaseStudies.jsx')` in place of
+     `element`, so its code isn't downloaded when the flag is off. Don't wrap
+     routes in `App.jsx`.
    - Part of a page, a nav link, a component: `flags.caseStudies && ...`
      (import `flags` from `src/flags.js`). For a nav link, filter
      `NAV_LINKS` in `src/config.js`.

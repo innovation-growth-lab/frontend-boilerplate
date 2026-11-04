@@ -1,4 +1,12 @@
 @import "tailwindcss";
+/* For the shadcn components in src/components/ui: their open/close
+   animations, and the data-open: / data-checked: … variants they use. */
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* There's no dark mode. The components carry dark: classes; this keeps them
+   behind a .dark class nothing sets, rather than following the visitor's OS. */
+@custom-variant dark (&:is(.dark *));
 
 /* Brown sets headings and key messages, Muli everything else (IGL brand book).
    The Brown files are licensed, so not in git. */
@@ -87,10 +95,82 @@
 
   --container-page: 1280px;
 
+  /* The identity is flat: no shadows, except the one for overlays (menus,
+     dialogs, popovers), which shadow-md and up all give. */
   --shadow-menu: 0 8px 24px rgb(9 38 64 / 0.14);
+  --shadow-2xs: 0 0 #0000;
+  --shadow-xs: 0 0 #0000;
+  --shadow-sm: 0 0 #0000;
+  --shadow-md: var(--shadow-menu);
+  --shadow-lg: var(--shadow-menu);
+  --shadow-xl: var(--shadow-menu);
+  --shadow-2xl: var(--shadow-menu);
+}
+
+/* shadcn's colour roles, which the components in src/components/ui use
+   (bg-primary, text-muted-foreground, border-input, ring-ring …), set to the
+   IGL design system's semantic colours. Use these names in components; the
+   IGL palette names above everywhere else. Corners are square everywhere
+   (--radius: 0): the only curves are the primary button's quarter round,
+   toggles and radios. */
+:root {
+  --background: var(--color-white);
+  --foreground: var(--color-dark-blue);
+  --card: var(--color-white);
+  --card-foreground: var(--color-dark-blue);
+  --popover: var(--color-white);
+  --popover-foreground: var(--color-dark-blue);
+  /* Red is the action colour. */
+  --primary: var(--color-red);
+  --primary-foreground: var(--color-white);
+  --secondary: var(--color-grey);
+  --secondary-foreground: var(--color-dark-blue);
+  --muted: var(--color-grey-50);
+  --muted-foreground: var(--color-grey-500);
+  /* Blue carries interactive state: the highlighted option in a menu. */
+  --accent: var(--color-blue-10);
+  --accent-foreground: var(--color-dark-blue);
+  --destructive: var(--color-red);
+  --border: var(--color-grey-200);
+  --input: var(--color-grey-300);
+  /* Focus is a 2px blue ring. */
+  --ring: var(--color-blue);
+  --radius: 0px;
+}
+
+@theme inline {
+  --font-heading: var(--font-display);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius);
+  --radius-xl: var(--radius);
+  --radius-2xl: var(--radius);
+  --radius-3xl: var(--radius);
+  --radius-4xl: var(--radius);
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
   body {
     @apply bg-white font-sans text-base text-dark-blue;
     text-wrap: pretty;
@@ -101,8 +181,14 @@
   h4 {
     @apply font-display font-normal;
   }
-  button:not(:disabled) {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
     cursor: pointer;
+  }
+  /* The IGL icon set is square-cut: Lucide's icons, squared off. */
+  .lucide {
+    stroke-linecap: square;
+    stroke-linejoin: miter;
   }
   :focus-visible {
     outline: 2px solid var(--color-blue);

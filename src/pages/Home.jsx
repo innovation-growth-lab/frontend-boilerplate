@@ -1,5 +1,9 @@
-import {Button, Container, Eyebrow} from '../components/ui.jsx';
+import {ArrowDown} from 'lucide-react';
+import {Button} from '@/components/ui/button';
+import {Container} from '@/components/ui/container';
+import {Eyebrow} from '@/components/ui/eyebrow';
 import {pageTitle, SITE_NAME} from '../config.js';
+import {flags} from '../flags.js';
 
 // A placeholder to replace with the project's own home page. It shows the
 // shared pieces in use: a <title>, the type scale and the button variants.
@@ -15,12 +19,16 @@ export default function Home() {
           brand.
         </p>
         <div className="flex flex-wrap items-center gap-4">
-          <Button to="/#about" icon="arrow-down">
-            Primary
+          <Button to="/#about">
+            Primary <ArrowDown data-icon="inline-end" />
           </Button>
           <Button variant="secondary">Secondary</Button>
           <Button variant="ghost">Ghost</Button>
-          <Button variant="low">Low</Button>
+          {flags.componentsPage && (
+            <Button variant="link" to="/components">
+              All components
+            </Button>
+          )}
         </div>
       </Container>
       <section id="about" className="scroll-mt-6 bg-blue-10">

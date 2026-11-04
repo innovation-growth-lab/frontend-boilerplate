@@ -19,5 +19,21 @@
     "useIgnoreFile": true,
     "defaultBranch": "main"
   },
-  "files": { "includes": ["**"] }
+  "files": {
+    "includes": ["**"]
+  },
+  "overrides": [
+    {
+      "includes": ["src/components/ui/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useSemanticElements": "off",
+            "useKeyWithClickEvents": "off",
+            "noLabelWithoutControl": "off"
+          }
+        }
+      }
+    }
+  ]
 }

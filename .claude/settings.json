@@ -11,7 +11,11 @@
       "Bash(npm run screenshots:*)",
       "Bash(npm run compare:*)",
       "Bash(node scripts/screenshots.js:*)",
-      "Bash(node scripts/compare.js:*)"
+      "Bash(node scripts/compare.js:*)",
+      "Bash(npx shadcn add:*)",
+      "Bash(npx shadcn view:*)",
+      "Bash(npx shadcn docs:*)",
+      "Bash(npx shadcn search:*)"
     ],
     "ask": [
       "Bash(./deploy.sh:*)",
