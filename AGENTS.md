@@ -82,7 +82,7 @@ For part of a page, use `flags.<name> && ...`.
 
 `deploy.sh` forces flags for the live site in its `FLAGS` list, whatever the
 `.env` files say, and writes them to `dist/VERSION`. Use that for anything that
-must never reach the live site. The `add-flag` skill walks through it.
+must never be shown on the live site. The `add-flag` skill walks through it.
 
 ## Hosting
 
