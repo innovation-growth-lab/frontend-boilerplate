@@ -17,7 +17,7 @@ description: Add a feature flag, to switch a page or feature on or off per build
    caseStudies: flag('CASE_STUDIES', false),
    ```
    A flag that only makes sense alongside another can depend on it:
-   `caseStudies && flag('CASE_STUDY_FILTERS', true)`.
+   `flag('CASE_STUDIES', false) && flag('CASE_STUDY_FILTERS', true)`.
 
 3. **`.env.example`:** add a commented line in the same style, with its default.
 

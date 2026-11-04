@@ -16,7 +16,6 @@
     "ask": [
       "Bash(./deploy.sh:*)",
       "Bash(zsh deploy.sh:*)",
-      "Bash(zsh deploy.sh:*)",
       "Bash(zsh ./deploy.sh:*)",
       "Bash(rsync:*)",
       "Bash(ssh igl-website:*)",

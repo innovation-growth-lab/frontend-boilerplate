@@ -51,15 +51,6 @@ VITE_FLAG_ANALYTICS=off npm run dev
 Vite fixes flags into the bundle at build time. A feature that's off is
 hidden but its code is still bundled.
 
-Vite fixes flags into the build. When a flag is off, what it covers can't be
-seen or reached: a flagged page's URL is the not-found page, and flagged parts
-of a page don't render.
-
-Its code is still in the deployed files, though, where anyone reading the
-site's JavaScript can find it. A flag hides work in progress; it doesn't keep
-anything secret. (A flagged page's code is in a separate file the site never
-requests, so visitors at least don't download it.)
-
 `deploy.sh` has overrides as a safeguard for the live site in its `FLAGS` list
 which overrule `.env`. You can see the flags for the build in `dist/VERSION`.
 
