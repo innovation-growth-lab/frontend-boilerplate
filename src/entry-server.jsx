@@ -2,11 +2,9 @@ import {renderToString} from 'react-dom/server';
 import {StaticRouter} from 'react-router';
 import App from './App.jsx';
 
-// The pages to prerender (scripts/prerender.js): every page every visitor sees
-// the same. With a flag, include a page only when it's on, as App does:
-// ...(flags.beta ? ['/beta'] : []). A page made from a visitor's own data
-// can't be prerendered; see the README for serving those.
-export const routes = ['/'];
+// The URLs scripts/prerender.js renders to HTML, and scripts/screenshots.js
+// screenshots: every page in src/routes.jsx.
+export {paths as routes} from './routes.jsx';
 
 // `route` is the app's own path ('/', '/about'); the router wants it with the
 // site's base on the front.

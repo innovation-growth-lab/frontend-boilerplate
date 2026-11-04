@@ -5,9 +5,8 @@
 // the live site.
 //
 // To add one: a line here, a line in .env.example, and `flags.<name> &&` where
-// it's used. A route behind a flag is best left unregistered when it's off
-// (App.jsx), so its URL falls through to the not-found page, and should also be
-// left out of `routes` in `entry-server.jsx`.
+// it's used. For a whole page, give it `flag: '<name>'` in src/routes.jsx
+// instead: when it's off, its URL is the not-found page.
 
 function flag(name, fallback) {
   const value = import.meta.env[`VITE_FLAG_${name}`];

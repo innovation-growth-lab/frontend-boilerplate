@@ -29,7 +29,7 @@ export default function Home() {
           <p className="max-w-prose">
             Replace this page with the project's own, set the name and footer in{' '}
             <code>src/config.js</code>, and add each new page to{' '}
-            <code>src/App.jsx</code> and <code>src/entry-server.jsx</code>.
+            <code>src/routes.jsx</code>.
           </p>
         </Container>
       </section>

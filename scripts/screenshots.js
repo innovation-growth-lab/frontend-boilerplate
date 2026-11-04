@@ -6,6 +6,11 @@
 // Then put two sets side by side with scripts/compare.js. ONLY=<regex> limits
 // the run to matching screen names.
 //
+// Every page in src/routes.jsx is screenshotted on its own, named after its
+// URL ('/' is home, '/guides/intro' is guides-intro), using the flags this
+// script runs with: run it with the same VITE_FLAG_* as the server it points
+// at. STATES adds what a plain page load doesn't show.
+//
 // Each screen starts from empty storage, with cookies already rejected so the
 // banner stays out of the way, and the clock and Math.random pinned so dates
 // and anything random come out the same on every run.
@@ -14,23 +19,13 @@
 
 import {mkdirSync} from 'node:fs';
 import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {chromium} from 'playwright';
+import {createServer} from 'vite';
 
 const [url = 'http://localhost:5173/', out = 'screens/app'] =
   process.argv.slice(2);
 const NOW = new Date('2026-10-01T10:00:00');
-
-// name: a path under `url`, and optionally steps to run before the shot, which
-// find things by visible text so they don't depend on how a build is put
-// together. Add each new page, and each state worth checking, here:
-//   'home-about': {path: '', steps: [(p) => click(p, 'About')]},
-const SCREENS = {
-  home: {path: ''},
-  'not-found': {path: 'no-such-page'},
-  // consent: null leaves the cookie question unanswered, so the banner shows.
-  'cookie-banner': {path: '', consent: null},
-  'cookie-settings': {path: '', steps: [(p) => click(p, 'Cookie settings')]},
-};
 
 // Buttons and links alike.
 const click = (p, name) =>
@@ -39,6 +34,34 @@ const click = (p, name) =>
     .or(p.getByRole('link', {name, exact: typeof name === 'string'}))
     .first()
     .click();
+
+// Screens beyond one per page. path is the app's own path; steps find things
+// by visible text, so they don't depend on how a build is put together.
+// consent: null leaves the cookie question unanswered, so the banner shows.
+const STATES = {
+  'not-found': {path: '/no-such-page'},
+  'cookie-banner': {path: '/', consent: null},
+  'cookie-settings': {path: '/', steps: [(p) => click(p, 'Cookie settings')]},
+};
+
+// The app's own list of pages, loaded through Vite since it's JSX.
+const vite = await createServer({
+  root: fileURLToPath(new URL('..', import.meta.url)),
+  server: {middlewareMode: true, hmr: false},
+  appType: 'custom',
+  logLevel: 'error',
+  // Its own cache, so it never makes the dev server re-optimise and reload.
+  cacheDir: 'node_modules/.vite-screenshots',
+});
+const {routes} = await vite.ssrLoadModule('/src/entry-server.jsx');
+await vite.close();
+
+const SCREENS = {...STATES};
+for (const path of routes) {
+  const name = path.slice(1).replaceAll('/', '-') || 'home';
+  if (name in SCREENS) throw new Error(`Two screens named ${name}`);
+  SCREENS[name] = {path};
+}
 
 const only = process.env.ONLY ? new RegExp(process.env.ONLY) : null;
 
@@ -62,7 +85,8 @@ for (const [name, {path, steps = [], consent = 0}] of Object.entries(SCREENS)) {
     };
   }, consent);
   try {
-    await page.goto(new URL(path, url).href);
+    // Relative to `url`, so a server on a sub-path works too.
+    await page.goto(new URL(path.slice(1), url).href);
     for (const step of steps) await step(page);
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(400);

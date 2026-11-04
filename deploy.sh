@@ -29,15 +29,21 @@ die() { echo "$*" >&2; exit 1; }
 #
 # --dry-run does everything except change the server or keep the tag: it
 # builds, then lists what rsync would change on the server.
+#
+# --tag=v1.2.3 uses that tag instead of asking for one, for running without a
+# terminal (an agent, say), where the prompt can't work.
 FORCE=
 DRY_RUN=
+TAG=
 for arg in "$@"; do
   case $arg in
     --force) FORCE=1 ;;
     --dry-run) DRY_RUN=1 ;;
-    *) die "Usage: ./deploy.sh [--force] [--dry-run]" ;;
+    --tag=*) TAG=${arg#--tag=} ;;
+    *) die "Usage: ./deploy.sh [--force] [--dry-run] [--tag=v1.2.3]" ;;
   esac
 done
+[[ -n $FORCE && -n $TAG ]] && die "--force deploys without a tag, so --tag does nothing. Drop one of them."
 
 if [[ -z $FORCE ]]; then
   if [[ -n $(git status --porcelain) ]]; then
@@ -63,10 +69,13 @@ if [[ -z $FORCE ]]; then
     IFS=. read -r MAJOR MINOR _ <<< "${LAST#v}"
     NEXT="v$MAJOR.$((MINOR + 1)).0"
   fi
-  # if EDITOR=vim, backspace won't work on vared since .zshrc is skipped.
-  bindkey -e
-  TAG=$NEXT
-  vared -p "Tag this deploy: " TAG
+  if [[ -z $TAG ]]; then
+    [[ -t 0 ]] || die "No terminal to ask for a tag. Pass --tag=$NEXT (the next minor)."
+    # if EDITOR=vim, backspace won't work on vared since .zshrc is skipped.
+    bindkey -e
+    TAG=$NEXT
+    vared -p "Tag this deploy: " TAG
+  fi
 
   # The quotes keep \. a literal dot; zsh strips the backslash otherwise.
   if [[ ! $TAG =~ '^v[0-9]+\.[0-9]+\.[0-9]+$' ]]; then
