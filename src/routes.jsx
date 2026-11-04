@@ -27,6 +27,11 @@ for (const page of PAGES) {
       `${page.path} has a URL parameter, so it needs \`paths\`: every URL to prerender, or [] if it can't be`,
     );
   }
+  for (const path of page.paths ?? [page.path]) {
+    if (!path.startsWith('/') || path.includes(':')) {
+      throw new Error(`${page.path}: "${path}" must be a real URL starting with /`);
+    }
+  }
 }
 
 // The pages this build has: those behind a flag that's off are left out.
