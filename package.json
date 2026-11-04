@@ -1,0 +1,31 @@
+{
+  "name": "frontend-boilerplate",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && vite build --ssr src/entry-server.jsx --outDir dist-server && node scripts/prerender.js",
+    "preview": "vite preview",
+    "screenshots": "node scripts/screenshots.js",
+    "prepare": "lefthook install || true",
+    "format": "biome check --write --linter-enabled=false --no-errors-on-unmatched",
+    "lint": "biome ci .",
+    "lint:changed": "biome ci --changed --since=origin/main --no-errors-on-unmatched",
+    "compare": "node scripts/compare.js"
+  },
+  "dependencies": {
+    "lucide-react": "^1.68.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.0",
+    "react-router": "^8.5.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-react": "^6.1.1",
+    "lefthook": "^2.2.2",
+    "playwright": "^1.63.0",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.3.1"
+  }
+}

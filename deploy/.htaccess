@@ -1,0 +1,21 @@
+# Copied into dist/ by deploy.sh, which replaces __BASE__ with its BASE.
+#
+# Unknown paths get 404.html, the not-found page, with a real 404 status. Pages
+# are plain files, so there are no rewrite rules and no fallback to index.html:
+# every valid URL must be a prerendered file (src/entry-server.jsx).
+#
+# WordPress's .htaccess higher up sends every path that isn't a file to its
+# index.php, and that applies in this directory too unless it has rewrite
+# settings of its own. Turning the engine on with no rules here replaces
+# WordPress's, so unknown paths reach the ErrorDocument below.
+RewriteEngine On
+ErrorDocument 404 __BASE__404.html
+
+# Every page links to hashed assets that the next deploy deletes, so browsers
+# must check for a new page each time. Needs mod_headers; without this guard
+# Apache returns a 500 if it's off.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

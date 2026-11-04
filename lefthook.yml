@@ -1,0 +1,11 @@
+pre-commit:
+  commands:
+    biome:
+      glob: '*.{js,jsx,ts,tsx,css,html,json,jsonc}'
+      run: npm run -s format -- {staged_files}
+      stage_fixed: true
+
+pre-push:
+  commands:
+    lint:
+      run: npm run -s lint:changed

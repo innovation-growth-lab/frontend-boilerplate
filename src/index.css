@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+/* Brown sets headings and key messages, Muli everything else (IGL brand book).
+   The Brown files are licensed, so not in git. */
+@font-face {
+  font-family: "Brown";
+  src: url("./assets/fonts/Brown-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Brown";
+  src: url("./assets/fonts/Brown-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Muli";
+  src: url("./assets/fonts/Muli-Regular.ttf") format("truetype");
+  font-weight: 300 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Muli";
+  src: url("./assets/fonts/Muli-SemiBold.ttf") format("truetype");
+  font-weight: 500 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Muli";
+  src: url("./assets/fonts/Muli-Bold.ttf") format("truetype");
+  font-weight: 700 800;
+  font-display: swap;
+}
+
+/* The IGL design system's tokens as a Tailwind theme. `static` emits every
+   variable, so inline styles can use var(--color-…) and non-Tailwind code (a
+   canvas, say) can read colours with getComputedStyle. */
+/* biome-ignore format: line-height and size table is cleaner this way */
+@theme static {
+  --font-sans: 'Muli', 'Mulish', 'Century Gothic', sans-serif;
+  --font-display: 'Brown', 'Century Gothic', sans-serif;
+
+  /* Tailwind's sizes, with the IGL system's tighter line heights. */
+  --text-*: initial;
+  --text-2xs: 0.625rem;  --text-2xs--line-height: 1.35;
+  --text-xs: 0.75rem;    --text-xs--line-height: 1.35;
+  --text-sm: 0.875rem;   --text-sm--line-height: 1.35;
+  --text-base: 1rem;     --text-base--line-height: 1.35;
+  --text-lg: 1.125rem;   --text-lg--line-height: 1.35;
+  --text-xl: 1.25rem;    --text-xl--line-height: 1.25;
+  --text-2xl: 1.5rem;    --text-2xl--line-height: 1.2;
+  --text-3xl: 1.875rem;  --text-3xl--line-height: 1.2;
+  --text-4xl: 2.25rem;   --text-4xl--line-height: 1.2;
+  --text-5xl: 2.5rem;    --text-5xl--line-height: 1.2;
+
+  --tracking-label: 0.06em;
+
+  /* The IGL palette (the IGL design system's tokens/colors.css). Tailwind's
+     own colours are switched off, so these are the only ones on offer. */
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-dark-blue: #092640;
+  --color-blue: #1f5dad;
+  --color-blue-60: #7dace8;
+  --color-blue-30: #bed5f3;
+  --color-blue-10: #dfeaf9;
+  --color-red: #ff5836;
+  --color-red-80: #ff8268;
+  --color-red-60: #ffac9b;
+  --color-red-40: #ffd5cd;
+  --color-yellow: #fab61b;
+  --color-yellow-80: #fbc854;
+  --color-yellow-60: #fddb8d;
+  --color-yellow-30: #feedc6;
+  --color-green: #00b2a2;
+  --color-green-40: #99e0da;
+  --color-green-20: #ccf0ec;
+  --color-grey: #ebebeb;
+  --color-grey-50: #f7f7f7;
+  --color-grey-150: #e0e0e0;
+  --color-grey-200: #d4d4d4;
+  --color-grey-300: #b4b4b4;
+  --color-grey-500: #767676;
+  --color-grey-700: #4a4a4a;
+
+  --container-page: 1280px;
+
+  --shadow-menu: 0 8px 24px rgb(9 38 64 / 0.14);
+}
+
+@layer base {
+  body {
+    @apply bg-white font-sans text-base text-dark-blue;
+    text-wrap: pretty;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display font-normal;
+  }
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+  }
+}

@@ -1,0 +1,11 @@
+.DS_Store
+.vercel
+.env*
+!.env.example
+.claude/settings.local.json
+node_modules
+dist
+dist-server
+screens
+# Brown is a commercial Lineto font: never commit it (README, Fonts).
+src/assets/fonts/Brown-*
