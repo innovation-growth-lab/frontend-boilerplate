@@ -43,6 +43,7 @@ for arg in "$@"; do
     *) die "Usage: ./deploy.sh [--force] [--dry-run] [--tag=v1.2.3]" ;;
   esac
 done
+[[ -n $FORCE && -n $TAG ]] && die "--force deploys without a tag, so --tag does nothing. Drop one of them."
 
 if [[ -z $FORCE ]]; then
   if [[ -n $(git status --porcelain) ]]; then

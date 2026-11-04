@@ -29,7 +29,9 @@ for (const page of PAGES) {
   }
   for (const path of page.paths ?? [page.path]) {
     if (!path.startsWith('/') || path.includes(':')) {
-      throw new Error(`${page.path}: "${path}" must be a real URL starting with /`);
+      throw new Error(
+        `${page.path}: "${path}" must be a real URL starting with /`,
+      );
     }
   }
 }

@@ -56,15 +56,12 @@ const vite = await createServer({
 const {routes} = await vite.ssrLoadModule('/src/entry-server.jsx');
 await vite.close();
 
-const SCREENS = {
-  ...Object.fromEntries(
-    routes.map((path) => [
-      path.slice(1).replaceAll('/', '-') || 'home',
-      {path},
-    ]),
-  ),
-  ...STATES,
-};
+const SCREENS = {...STATES};
+for (const path of routes) {
+  const name = path.slice(1).replaceAll('/', '-') || 'home';
+  if (name in SCREENS) throw new Error(`Two screens named ${name}`);
+  SCREENS[name] = {path};
+}
 
 const only = process.env.ONLY ? new RegExp(process.env.ONLY) : null;
 

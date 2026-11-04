@@ -72,17 +72,30 @@ Each flag is `VITE_FLAG_<NAME>=on|off`, with its default in `src/flags.js` and
 a line in `.env.example`. Set them in `.env.local` or for one command
 (`VITE_FLAG_ANALYTICS=off npm run dev`). Any other value fails the build.
 
-Vite fixes flags into the bundle at build time, so changing one means
-rebuilding (on Vercel, set it per environment and redeploy). A feature that's
-off is hidden, but its code still ships, so a flag is no place for secrets.
+Vite fixes flag values at build time, so changing one means rebuilding (on
+Vercel, set it per environment and redeploy).
 
 For a whole page, give it `flag: '<name>'` in `src/routes.jsx`: when it's off
 the page isn't registered or prerendered, and its URL is the not-found page.
 For part of a page, use `flags.<name> && ...`.
 
+**Off means hidden, not removed.** When a flag is off, what it covers can't be
+seen or reached. Its code is still in the deployed files: the build keeps code
+behind a flag and only skips running it, so anyone reading the site's
+JavaScript can find that code and its text. A flag hides work in progress; it
+doesn't keep anything secret.
+
+- **A whole page:** give it `flag: '<name>'` and, in place of `element`,
+  `load: () => import('./pages/X.jsx')` in `src/routes.jsx`. When the flag is
+  off, the page isn't registered or prerendered, so its URL is the not-found
+  page. Its code goes in a separate file that the site never requests: still
+  on the server, but not downloaded by visitors.
+- **Part of a page:** `flags.<name> && ...`. That code stays in the main
+  bundle, skipped when the flag is off.
+
 `deploy.sh` forces flags for the live site in its `FLAGS` list, whatever the
 `.env` files say, and writes them to `dist/VERSION`. Use that for anything that
-must never reach the live site. The `add-flag` skill walks through it.
+must never be shown on the live site. The `add-flag` skill walks through it.
 
 ## Hosting
 

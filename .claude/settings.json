@@ -16,6 +16,10 @@
     "ask": [
       "Bash(./deploy.sh:*)",
       "Bash(zsh deploy.sh:*)",
+      "Bash(zsh deploy.sh:*)",
+      "Bash(zsh ./deploy.sh:*)",
+      "Bash(rsync:*)",
+      "Bash(ssh igl-website:*)",
       "Bash(git push:*)",
       "Bash(vercel:*)",
       "Bash(npx vercel:*)"

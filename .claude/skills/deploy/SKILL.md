@@ -13,8 +13,9 @@ before anything is published. Never use `--force` unless they ask for it.
    person needs ssh access with an `igl-website` alias in `~/.ssh/config`.
 
 2. **Check the commit.** `deploy.sh` deploys only a clean, pushed, untagged
-   commit. If `git status` shows changes, or `main` is ahead of `origin`, tell
-   the person what's unpushed and ask before committing or pushing.
+   commit. If `git status` shows changes, or HEAD isn't pushed
+   (`git branch -r --contains HEAD` prints nothing), tell the person what's
+   unpushed and ask before committing or pushing.
 
 3. **Work out the tag.** The latest is
    `git tag --list 'v*' --sort=-v:refname | head -n 1`. Suggest the next minor
