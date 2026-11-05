@@ -104,6 +104,11 @@ for (const [name, {path, steps = [], consent = 0}] of Object.entries(SCREENS)) {
     };
   }, consent);
   try {
+    // A state on a page this build doesn't have (its flag is off) would wait
+    // 30s for something to click, then fail.
+    if (steps.length && !routes.includes(path)) {
+      throw new Error(`${path} isn't in this build; is its flag off?`);
+    }
     // Relative to `url`, so a server on a sub-path works too. Waiting for the
     // network to settle lets the page's code load and hydrate first: before
     // that, clicks on prerendered markup do nothing.

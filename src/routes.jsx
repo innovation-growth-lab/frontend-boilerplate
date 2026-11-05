@@ -10,7 +10,8 @@ import Home from './pages/Home.jsx';
 //   element  The page, imported at the top of this file.
 //   load     Instead of `element`, for a page behind a flag:
 //            () => import('./pages/Beta.jsx'). Its code is then fetched only
-//            when the flag is on, rather than shipped to every visitor.
+//            when the flag is on; when it is, every page waits for it before
+//            the app starts, so once a page is live for good, use `element`.
 //   flag     Optional: a key of `flags`. The page exists only when it's on;
 //            otherwise its URL is the not-found page.
 //   paths    Needed when `path` has a parameter: every real URL to prerender,

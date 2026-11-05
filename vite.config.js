@@ -12,7 +12,7 @@ export default defineConfig({
   resolve: {
     alias: [
       // `import … from '@/components/ui/button'` (components.json).
-      {find: /^@\//, replacement: `${src('')}`},
+      {find: /^@\//, replacement: src('')},
       // The components import `cn` from the cn package; this gives them the
       // copy that knows the IGL theme's names (src/lib/cn.js). Exactly `cn`,
       // so that file's own `cn/config` import still reaches the package.
