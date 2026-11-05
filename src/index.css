@@ -110,9 +110,7 @@
 /* shadcn's colour roles, which the components in src/components/ui use
    (bg-primary, text-muted-foreground, border-input, ring-ring …), set to the
    IGL design system's semantic colours. Use these names in components; the
-   IGL palette names above everywhere else. Corners are square everywhere
-   (--radius: 0): the only curves are the primary button's quarter round,
-   toggles and radios. */
+   IGL palette names above everywhere else. */
 :root {
   --background: var(--color-white);
   --foreground: var(--color-dark-blue);
@@ -135,7 +133,6 @@
   --input: var(--color-grey-300);
   /* Focus is a 2px blue ring. */
   --ring: var(--color-blue);
-  --radius: 0px;
 }
 
 @theme inline {
@@ -158,14 +155,6 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-xs: var(--radius);
-  --radius-sm: var(--radius);
-  --radius-md: var(--radius);
-  --radius-lg: var(--radius);
-  --radius-xl: var(--radius);
-  --radius-2xl: var(--radius);
-  --radius-3xl: var(--radius);
-  --radius-4xl: var(--radius);
 }
 
 @layer base {

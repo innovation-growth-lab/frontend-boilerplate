@@ -41,8 +41,9 @@ fails, fix the code or add an ignore rule; don't skip the hooks with `--no-verif
   `grey`, `grey-50`/`150`/`200`/`300`/`500`/`700`, `white`, `black`. shadcn's
   role names (`primary`, `muted-foreground`, `border`, `input`, `ring` …) also
   work, set to IGL colours in `src/index.css`. The type scale is Tailwind's
-  sizes (plus `text-2xs`) with tighter line heights. Corners are square:
-  `rounded-*` gives 0.
+  sizes (plus `text-2xs`) with tighter line heights. Corners are square, so
+  leave out `rounded-*`; the only curve is the primary button's quarter round,
+  which `Button` draws itself.
 - **Pages render in Node first.** Prerendering runs every page with no
   browser, so anything that reads `window`, `document` or `localStorage` must
   be inside a `useEffect` or an event handler, never in the render itself.
@@ -142,8 +143,9 @@ style and needs restyling to match the others:
   (a 2px blue edge). Invalid: `aria-invalid:border-destructive
   aria-invalid:ring-2 aria-invalid:ring-destructive`.
 - Menu and list items: `py-2 pl-3 text-base`.
-- No fixed corners (`rounded-[4px]`) or soft rings (`ring-ring/50`,
-  `ring-foreground/10`: use `ring-border`).
+- Square corners: delete every `rounded-*` class (`rounded-lg`, `rounded-md`,
+  `rounded-[4px]` …) rather than overriding it with `rounded-none`.
+- No soft rings (`ring-ring/50`, `ring-foreground/10`: use `ring-border`).
 - Then add it to `src/pages/Components.jsx`, and if it opens something, a
   screen to `STATES` in `scripts/screenshots.js`.
 
