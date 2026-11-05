@@ -1,7 +1,7 @@
 import {useEffect, useRef} from 'react';
+import {Container} from '@/components/ui/container';
 import {COOKIE_POLICY_URL} from '../config.js';
 import {setConsent} from '../lib/ga.js';
-import {Container} from './ui.jsx';
 
 // Accept and Reject share this, so neither is easier to choose than the other.
 const BUTTON =

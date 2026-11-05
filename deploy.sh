@@ -15,6 +15,8 @@ TARGET=/var/www/html$BASE              # the same path on the server's disk
 FLAGS=(
   # Fixed into the bundle, and would mark every visitor's hits as debug.
   VITE_FLAG_GA_DEBUG=off
+  # A reference page for building the site, not for visitors.
+  VITE_FLAG_COMPONENTS_PAGE=off
 )
 
 cd "$(dirname "$0")"

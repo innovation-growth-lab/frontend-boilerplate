@@ -25,4 +25,7 @@ export const flags = {
   // Send analytics from `npm run dev` too, and mark every hit debug_mode so it
   // shows in GA's DebugView. deploy.sh forces it off.
   gaDebug: flag('GA_DEBUG', false),
+  // /components, the reference page showing every UI component. deploy.sh
+  // forces it off: it's for building the site, not for visitors.
+  componentsPage: flag('COMPONENTS_PAGE', true),
 };

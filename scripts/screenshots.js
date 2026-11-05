@@ -42,6 +42,25 @@ const STATES = {
   'not-found': {path: '/no-such-page'},
   'cookie-banner': {path: '/', consent: null},
   'cookie-settings': {path: '/', steps: [(p) => click(p, 'Cookie settings')]},
+  // The components page's popups, open (when componentsPage is on).
+  'components-dialog': {
+    path: '/components',
+    steps: [(p) => click(p, 'Open dialog')],
+  },
+  'components-menu': {
+    path: '/components',
+    steps: [(p) => click(p, 'Open menu')],
+  },
+  'components-select': {
+    path: '/components',
+    steps: [(p) => p.getByRole('combobox', {name: 'Stage'}).click()],
+  },
+  'components-combobox': {
+    path: '/components',
+    steps: [
+      (p) => p.getByRole('combobox', {name: 'Country', exact: true}).fill('an'),
+    ],
+  },
 };
 
 // The app's own list of pages, loaded through Vite since it's JSX.
@@ -85,14 +104,26 @@ for (const [name, {path, steps = [], consent = 0}] of Object.entries(SCREENS)) {
     };
   }, consent);
   try {
-    // Relative to `url`, so a server on a sub-path works too.
-    await page.goto(new URL(path.slice(1), url).href);
+    // A state on a page this build doesn't have (its flag is off) would wait
+    // 30s for something to click, then fail.
+    if (steps.length && !routes.includes(path)) {
+      throw new Error(`${path} isn't in this build; is its flag off?`);
+    }
+    // Relative to `url`, so a server on a sub-path works too. Waiting for the
+    // network to settle lets the page's code load and hydrate first: before
+    // that, clicks on prerendered markup do nothing.
+    await page.goto(new URL(path.slice(1), url).href, {
+      waitUntil: 'networkidle',
+    });
     for (const step of steps) await step(page);
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(400);
     await page.screenshot({
       path: join(out, `${name}.png`),
-      fullPage: true,
+      // A screen with steps shows something just opened, which the click has
+      // scrolled into view: shoot the window as it is. A full-page shot
+      // resizes the window, which closes some popups (a Select).
+      fullPage: steps.length === 0,
       animations: 'disabled',
     });
     console.log('ok  ', name);

@@ -1,5 +1,6 @@
-import {useEffect, useState} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import {Link, Outlet, useLocation, useNavigationType} from 'react-router';
+import {Container} from '@/components/ui/container';
 import logoHorizontal from '../assets/logos/igl-logo-horizontal.svg';
 import logoPrimaryReversed from '../assets/logos/igl-logo-primary-reversed.svg';
 import logoSecondaryReversed from '../assets/logos/igl-logo-secondary-reversed.svg';
@@ -8,7 +9,6 @@ import {FOOTER, NAV_LINKS, NESTA_ENDORSED, SITE_NAME} from '../config.js';
 import {flags} from '../flags.js';
 import {getConsent} from '../lib/ga.js';
 import CookieBanner from './CookieBanner.jsx';
-import {Container} from './ui.jsx';
 
 // Wraps every page: nav, the page itself, then the footer, and the cookie
 // banner over them.
@@ -24,7 +24,10 @@ export default function Layout() {
       <ScrollManager />
       <Nav />
       <main className="flex-1">
-        <Outlet />
+        {/* Holds a page whose code is still downloading (`load`). */}
+        <Suspense>
+          <Outlet />
+        </Suspense>
       </main>
       <Footer
         onCookieSettings={flags.analytics && (() => setBanner('reopened'))}

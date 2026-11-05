@@ -1,5 +1,8 @@
+import {ArrowRight} from 'lucide-react';
+import {Button} from '@/components/ui/button';
+import {Container} from '@/components/ui/container';
+import {Eyebrow} from '@/components/ui/eyebrow';
 import {pageTitle, SITE_NAME} from '../config.js';
-import {Button, Container, Eyebrow} from './ui.jsx';
 
 // An unknown path. The host serves 404.html (this page, prerendered) for it
 // with a 404 status, and the app shows this at the same URL, so GA's page view
@@ -14,8 +17,8 @@ export default function NotFound() {
         <p className="max-w-[40ch] font-display text-xl">
           That page doesn't exist or has moved.
         </p>
-        <Button to="/" icon="arrow-right">
-          Back to {SITE_NAME}
+        <Button to="/">
+          Back to {SITE_NAME} <ArrowRight data-icon="inline-end" />
         </Button>
       </Container>
     </>
