@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import {Link, Outlet, useLocation, useNavigationType} from 'react-router';
 import {Container} from '@/components/ui/container';
 import logoHorizontal from '../assets/logos/igl-logo-horizontal.svg';
@@ -24,7 +24,10 @@ export default function Layout() {
       <ScrollManager />
       <Nav />
       <main className="flex-1">
-        <Outlet />
+        {/* Holds a page whose code is still downloading (`load`). */}
+        <Suspense>
+          <Outlet />
+        </Suspense>
       </main>
       <Footer
         onCookieSettings={flags.analytics && (() => setBanner('reopened'))}

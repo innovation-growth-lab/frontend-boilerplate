@@ -94,7 +94,8 @@ doesn't keep anything secret.
   `load: () => import('./pages/X.jsx')` in `src/routes.jsx`. When the flag is
   off, the page isn't registered or prerendered, so its URL is the not-found
   page. Its code goes in a separate file that the site never requests: still
-  on the server, but not downloaded by visitors.
+  on the server, but not downloaded by visitors. With the flag on, only
+  visitors who open that page download it.
 - **Part of a page:** `flags.<name> && ...`. That code stays in the main
   bundle, skipped when the flag is off.
 
