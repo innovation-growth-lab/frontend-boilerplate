@@ -8,6 +8,7 @@ import logoMark from '../assets/logos/igl-mark.svg';
 import {FOOTER, NAV_LINKS, NESTA_ENDORSED, SITE_NAME} from '../config.js';
 import {flags} from '../flags.js';
 import {getConsent} from '../lib/ga.js';
+import {reportScreen} from '../lib/screen-report.js';
 import CookieBanner from './CookieBanner.jsx';
 
 // Wraps every page: nav, the page itself, then the footer, and the cookie
@@ -19,6 +20,12 @@ export default function Layout() {
   useEffect(() => {
     if (flags.analytics && getConsent() === null) setBanner('first');
   }, []);
+  // The first time a browser reaches the home page, whether they land there
+  // or click through to it, report its screen size (once per browser).
+  const {pathname} = useLocation();
+  useEffect(() => {
+    if (pathname === '/') reportScreen();
+  }, [pathname]);
   return (
     <div className="flex min-h-screen flex-col">
       <ScrollManager />

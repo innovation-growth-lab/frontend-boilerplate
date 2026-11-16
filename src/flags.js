@@ -28,4 +28,8 @@ export const flags = {
   // /components, the reference page showing every UI component. deploy.sh
   // forces it off: it's for building the site, not for visitors.
   componentsPage: flag('COMPONENTS_PAGE', true),
+  // Report each visitor's screen and window size, once, to the sheet at
+  // VITE_SCREEN_REPORT_URL (src/lib/screen-report.js). Nothing is sent without
+  // that URL. For prototypes: deploy.sh forces it off for the live site.
+  screenReport: flag('SCREEN_REPORT', true),
 };

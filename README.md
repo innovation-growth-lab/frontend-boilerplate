@@ -106,3 +106,19 @@ views come from GA's "page changes based on browser history events" setting
 (keep it on).
 
 `VITE_FLAG_ANALYTICS=off` removes GA, the banner and the footer link.
+
+## Screen sizes
+
+For a prototype, it helps to know what people view it on. The first time a
+browser reaches the home page, `src/lib/screen-report.js` sends its screen
+size, pixel ratio (2 on a Retina Mac, 1.25 or 1.5 on a scaled Windows laptop),
+window size and whether it's a touch device to a Google Sheet, one row each.
+It keeps no ID, only a note in `localStorage` that it has reported, and it
+doesn't wait for the cookie banner.
+
+To switch it on, set up the sheet with `scripts/screen-report.gs` (its comments
+walk through it) and put the web app's URL in `VITE_SCREEN_REPORT_URL`, in
+Vercel's environment variables for the prototype. It sends only from
+production builds; `npm run dev` logs the report to the console instead.
+`VITE_FLAG_SCREEN_REPORT=off` stops it, and `deploy.sh` forces that for the
+live site.
