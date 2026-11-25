@@ -196,6 +196,17 @@ on.
 off for any tool whose URLs or page titles carry what visitors type in: GA
 reads both.
 
+## Screen reports
+
+`src/lib/screen-report.js` POSTs one row per browser (screen and window size,
+`devicePixelRatio`, touch) to a Google Apps Script web app at
+`VITE_SCREEN_REPORT_URL`, the first time it reaches `/`; Layout calls it.
+`scripts/screen-report.gs` is the receiver, with set-up steps. No URL, no
+report; production builds only (dev logs it to the console). It keeps no ID
+(only a `localStorage` note that it has reported) and doesn't wait for cookie
+consent, so it's behind `screenReport`, which `deploy.sh` forces off for the
+live site. Keep it off there unless the live site's consent covers it.
+
 ## Checking visual changes
 
 For anything visual, screenshot every screen before and after the change and

@@ -17,6 +17,8 @@ FLAGS=(
   VITE_FLAG_GA_DEBUG=off
   # A reference page for building the site, not for visitors.
   VITE_FLAG_COMPONENTS_PAGE=off
+  # For prototypes: the live site asks for consent before tracking anything.
+  VITE_FLAG_SCREEN_REPORT=off
 )
 
 cd "$(dirname "$0")"
