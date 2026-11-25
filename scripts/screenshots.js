@@ -6,6 +6,11 @@
 // Then put two sets side by side with scripts/compare.js. ONLY=<regex> limits
 // the run to matching screen names.
 //
+// The window is 1280 wide: the smaller laptop screens of the policymakers and
+// officials IGL's tools are for.
+//
+// A state's path can carry a query (/projects?dev) for a page that reads one.
+//
 // Every page in src/routes.jsx is screenshotted on its own, named after its
 // URL ('/' is home, '/guides/intro' is guides-intro), using the flags this
 // script runs with: run it with the same VITE_FLAG_* as the server it points
@@ -90,7 +95,7 @@ mkdirSync(out, {recursive: true});
 for (const [name, {path, steps = [], consent = 0}] of Object.entries(SCREENS)) {
   if (only && !only.test(name)) continue;
   const context = await browser.newContext({
-    viewport: {width: 1440, height: 900},
+    viewport: {width: 1280, height: 800},
   });
   const page = await context.newPage();
   await page.clock.setFixedTime(NOW);
@@ -106,7 +111,7 @@ for (const [name, {path, steps = [], consent = 0}] of Object.entries(SCREENS)) {
   try {
     // A state on a page this build doesn't have (its flag is off) would wait
     // 30s for something to click, then fail.
-    if (steps.length && !routes.includes(path)) {
+    if (steps.length && !routes.includes(path.split('?')[0])) {
       throw new Error(`${path} isn't in this build; is its flag off?`);
     }
     // Relative to `url`, so a server on a sub-path works too. Waiting for the

@@ -213,9 +213,11 @@ Every path in `src/routes.jsx` is screenshotted automatically, named after its
 URL. Add states a plain page load doesn't show (an open dialog, a filled form)
 to `STATES` in `scripts/screenshots.js`; those are shot at window size, since a
 full-page shot resizes the window and closes some popups. `ONLY=<regex>` limits
-the run. Run the script with the same `VITE_FLAG_*` values as the dev server,
-since it reads the page list itself. Look at the compare images, and show the
-person the relevant ones.
+the run. Screens are 1280 wide, a smaller laptop: IGL's users are mostly
+policymakers and officials at desks, not on phones. A state's path can carry a
+query (`/projects?dev`). Run the script with the same `VITE_FLAG_*` values as
+the dev server, since it reads the page list itself. Look at the compare
+images, and show the person the relevant ones.
 
 ## Skills
 
